@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+* {
+    box-sizing: border-box;
+}
+.search-container {
+    margin-bottom: 20px;
+}
+.results {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.results li a {
+    border: 1px solid #ddd;
+    margin-top: -1px; /* Prevent double borders */
+    background-color: #f6f6f6;
+    padding: 12px;
+    text-decoration: none;
+    font-size: 18px;
+    color: black;
+    display: block
+}
+.results li a:hover:not(.header) {
+    background-color: #eee;
+  }
