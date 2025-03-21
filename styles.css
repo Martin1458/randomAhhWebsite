@@ -5,24 +5,53 @@ body {
 * {
     box-sizing: border-box;
 }
+
+
 .search-container {
     margin-bottom: 20px;
 }
+
+
 .results {
     list-style-type: none;
     padding: 0;
     margin: 0;
 }
-.results li a {
+
+.results li div {
     border: 1px solid #ddd;
     margin-top: -1px; /* Prevent double borders */
     background-color: #f6f6f6;
     padding: 12px;
+    display: flex;
+}
+
+.results li div a {
     text-decoration: none;
     font-size: 18px;
     color: black;
-    display: block
+    /* center a within a div */
+    display: flex;
+    align-items: center;
+    margin-left: 20px;
 }
-.results li a:hover:not(.header) {
+
+.results li div img {
+    display: block;
+    /* margin: auto; */
+    width: 50px;
+    height: auto;
+    border-radius: 40% / 50%;
+}
+
+.results li div:hover:not(.header) {
     background-color: #eee;
-  }
+}
+
+
+.selected-app {
+    background-color: #7b76dd;
+    display: flex;
+    align-items: center;
+    border-radius: 15px;
+}

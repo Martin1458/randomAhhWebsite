@@ -12,14 +12,24 @@ function search() {
             results.innerHTML = '';
 
             data.results.forEach(item => {
+                //  <li>
+                //      <div class="itemDiv">
+                //          <a>item.trackName</a>
+                //          <img src="item.artworkUrl100" alt="item.trackName">
+                //      </div>
+                
                 const li = document.createElement('li');
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'itemDiv';
+                
                 const a = document.createElement('a');
                 a.textContent = item.trackName;
-                a.href = item.trackViewUrl; // Link to the track
-                a.target = '_blank'; // Open in a new tab
                 
+                const img = document.createElement('img');
+                img.src = item.artworkUrl512;
+
                 // Add click event to select the item
-                a.addEventListener('click', (event) => {
+                itemDiv.addEventListener('click', (event) => {
                     event.preventDefault(); // Prevent the link from navigating immediately
                     selectedItem = item; // Save the selected item
                     console.log('Selected item:', selectedItem);
@@ -29,14 +39,16 @@ function search() {
                     select(); // Call select() to display the selected item
                 });
                 
-                li.appendChild(a);
+                itemDiv.appendChild(img);
+                itemDiv.appendChild(a);
+                li.appendChild(itemDiv);
                 results.appendChild(li);
             });
         })
         .catch(error => console.error('Error:', error));
 }
 //! selectedItem is a global variable that stores the selected item. 
-//! selectedApp is the container where the selected item is displayed.
+//! selectedApp is the container (div) where the selected item is displayed.
 
 function select() {
     const searchContainer = document.getElementById('search-container');
