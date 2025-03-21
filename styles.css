@@ -6,6 +6,11 @@ body {
     box-sizing: border-box;
 }
 
+.app-select {
+    background-color: #7b76dd;
+    flex-direction: column;
+}
+
 
 .search-container {
     margin-bottom: 20px;
@@ -14,15 +19,15 @@ body {
 
 .results {
     list-style-type: none;
+    margin: 50px;
     padding: 0;
-    margin: 0;
 }
 
 .results li div {
     border: 1px solid #ddd;
     margin-top: -1px; /* Prevent double borders */
     background-color: #f6f6f6;
-    padding: 12px;
+    padding: 12px; 
     display: flex;
 }
 

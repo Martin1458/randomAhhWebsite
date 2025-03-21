@@ -93,3 +93,5 @@ function select() {
         selectedApp.innerHTML = '';
     }
 }
+
+select(); // Call select() to initialize the UI
