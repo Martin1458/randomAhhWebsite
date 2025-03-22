@@ -53,9 +53,10 @@ function search() {
 function select() {
     const searchContainer = document.getElementById('search-container');
     const selectedApp = document.getElementById('selected-app');
+    const results = document.getElementById('results');
 
     // Check if the elements exist
-    if (!searchContainer || !selectedApp) {
+    if (!searchContainer || !selectedApp || !results) {
         console.error('Required elements are missing in the DOM.');
         return;
     }
@@ -64,11 +65,11 @@ function select() {
         console.log('Selected item:', selectedItem);
         // Clear the search-container
         searchContainer.innerHTML = '';
+        results.innerHTML = ''; // Clear results
         // Display the selected-app with a remove button
         selectedApp.innerHTML = `
-            <h2>${selectedItem.trackName}</h2>
             <img src="${selectedItem.artworkUrl100}" alt="${selectedItem.trackName}">
-            <a href="${selectedItem.trackViewUrl}" target="_blank">View in iTunes</a>
+            <h2>${selectedItem.trackName}</h2>
             <button id="removeButton">Remove</button>
         `;
 
@@ -89,8 +90,9 @@ function select() {
             <input type="text" id="searchTerm" placeholder="Enter app name">
             <button onclick="search()">Search</button>
         `;
-        // Clear the selected-app
+        // Clear the selected-app and results
         selectedApp.innerHTML = '';
+        results.innerHTML = '';
     }
 }
 

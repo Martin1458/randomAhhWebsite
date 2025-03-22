@@ -6,20 +6,37 @@ body {
     box-sizing: border-box;
 }
 
+/* Center all elements inside app-select */
 .app-select {
-    background-color: #7b76dd;
+    display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ff2b2b;
+    border-radius: 50px;
+    min-height: 80px; 
 }
+
+/* Set size to zero when empty */
+#search-container:empty,
+#results:empty,
+#selected-app:empty {
+    width: 0;
+    height: 0;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
 
 
 .search-container {
-    margin-bottom: 20px;
+    margin: 20px;
 }
-
 
 .results {
     list-style-type: none;
-    margin: 50px;
+    margin: 20px;
     padding: 0;
 }
 
@@ -46,7 +63,7 @@ body {
     /* margin: auto; */
     width: 50px;
     height: auto;
-    border-radius: 40% / 50%;
+    border-radius: 20% / 20%;
 }
 
 .results li div:hover:not(.header) {
@@ -55,8 +72,22 @@ body {
 
 
 .selected-app {
-    background-color: #7b76dd;
+    /* background-color: #514ade; */
     display: flex;
     align-items: center;
     border-radius: 15px;
+    height: 80px;
+}
+
+.selected-app img {
+    height: 80%;
+    width: auto;
+    border-radius: 20% / 20%;
+}
+
+/* Add a smooth transition for better UX */
+#search-container,
+#results,
+#selected-app {
+    transition: all 0.3s ease;
 }
