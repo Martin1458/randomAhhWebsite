@@ -6,8 +6,8 @@ body {
     box-sizing: border-box;
 }
 
-/* Center all elements inside app-select */
-.app-select {
+/* Center all elements inside chooser */
+.chooser {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -87,6 +87,16 @@ body {
     border-radius: 20% / 20%;
 }
 
+.selected-app h2 {
+    margin: 0;
+    font-size: 18px;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 50%;
+    white-space: nowrap;
+}
+
 /* Add a smooth transition for better UX */
 #search-container,
 #results,
@@ -100,4 +110,13 @@ body {
     font-size: 18px;
     color: #333;
     text-align: center;
+}
+
+.notification-text {
+    font-size: 18px;
+    color: #333;
+    /* text-align: center; */
+    padding: 5px;
+    width: 80%;
+    height: 80%;
 }
