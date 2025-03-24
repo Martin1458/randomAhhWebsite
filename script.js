@@ -54,9 +54,10 @@ function select() {
     const searchContainer = document.getElementById('search-container');
     const selectedApp = document.getElementById('selected-app');
     const results = document.getElementById('results');
+    const appStatus = document.getElementById('app-status'); // New status element
 
     // Check if the elements exist
-    if (!searchContainer || !selectedApp || !results) {
+    if (!searchContainer || !selectedApp || !results || !appStatus) {
         console.error('Required elements are missing in the DOM.');
         return;
     }
@@ -70,8 +71,10 @@ function select() {
         selectedApp.innerHTML = `
             <img src="${selectedItem.artworkUrl100}" alt="${selectedItem.trackName}">
             <h2>${selectedItem.trackName}</h2>
-            <button id="removeButton">Remove</button>
+            <button id="removeButton" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
         `;
+        appStatus.textContent = `Selected app: ${selectedItem.trackName}`; // Update status
+        appStatus.style.color = 'green'; // Set status color to green
 
         // Add event listener to the remove button
         const removeButton = document.getElementById('removeButton');
@@ -93,6 +96,8 @@ function select() {
         // Clear the selected-app and results
         selectedApp.innerHTML = '';
         results.innerHTML = '';
+        appStatus.textContent = 'No app selected'; // Reset status
+        appStatus.style.color = 'red'; // Set status color to red
     }
 }
 

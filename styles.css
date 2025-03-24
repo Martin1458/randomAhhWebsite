@@ -77,6 +77,8 @@ body {
     align-items: center;
     border-radius: 15px;
     height: 80px;
+    width: 100%;
+    justify-content: space-evenly;
 }
 
 .selected-app img {
@@ -90,4 +92,12 @@ body {
 #results,
 #selected-app {
     transition: all 0.3s ease;
+}
+
+/* Add styles for the new app-status element */
+.app-status {
+    margin-top: 20px;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
 }
