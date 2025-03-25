@@ -102,3 +102,54 @@ function select() {
 }
 
 select(); // Call select() to initialize the UI
+
+function showTab(tabId) {
+    // Hide all tab contents
+    const tabContents = document.querySelectorAll('.tab-content');
+    tabContents.forEach(content => content.classList.remove('active'));
+
+    // Remove active class from all tab buttons
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(button => button.classList.remove('active'));
+
+    // Show the selected tab content and activate the corresponding button
+    document.getElementById(tabId).classList.add('active');
+    document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
+}
+
+// Manage input image
+const inputImage = document.getElementById('input-image');
+const imagePreview = document.getElementById('image-preview');
+inputImage.onchange = evt => {
+    const [file] = inputImage.files;
+    if (file) {
+        imagePreview.src = URL.createObjectURL(file);
+    }
+};
+
+// Dynamically load images from the ./images/ directory into the gallery
+function loadGalleryImages() {
+    const gallery = document.getElementById('image-gallery');
+    const images = [
+        './images/image1.jpg',
+        './images/image2.jpg',
+        './images/image3.jpg',
+        './images/image4.jpg',
+        './images/image5.jpg',
+        './images/image6.jpg'
+    ]; 
+
+    images.forEach(imagePath => {
+        const img = document.createElement('img');
+        img.src = imagePath;
+        img.alt = 'Gallery Image';
+        img.addEventListener('click', () => {
+            console.log(`Selected image: ${imagePath}`);
+            imagePreview.src = imagePath;
+        });
+        gallery.appendChild(img);
+    });
+}
+
+// Call this function when the page loads to populate the gallery
+loadGalleryImages();

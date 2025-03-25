@@ -20,11 +20,25 @@
     <div id="chooser" class="chooser">
         <textarea id="notification-text" class="notification-text" placeholder="Enter notification text here"></textarea>
     </div>
-    <script src="script.js"></script>
-    <!--
-        <div class="row">
-            <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple211/v4/ad/6c/56/ad6c569b-ef95-804a-9440-fc55613565f4/logo_youtube_2024_q4_color-0-1x_U007emarketing-0-0-0-6-0-0-0-85-220-0.png/512x512bb.jpg" alt="Youtube" style="width:100px;height:100px;">
+
+    <h2>Background image:</h2>
+    <div id="chooser" class="chooser">
+        <div class="tabs">
+            <button class="tab-button active" onclick="showTab('upload-tab')">Upload Image</button>
+            <button class="tab-button" onclick="showTab('gallery-tab')">Choose from Gallery</button>
         </div>
-    -->
+    
+        <div id="upload-tab" class="tab-content active">
+            <input type="file" id="input-image" class="input-image" accept="image/*">
+        </div>
+        
+        <div id="gallery-tab" class="tab-content">
+            <div id="image-gallery" class="image-gallery"></div>
+        </div>
+        <h3>Preview:</h3>
+        <img id="image-preview" class="image-preview" src="#" alt="your image" />
+    </div>
+
+    <script src="script.js"></script>
     </body>
 </html>
