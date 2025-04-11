@@ -5,6 +5,14 @@ body {
 * {
     box-sizing: border-box;
 }
+@font-face {
+    font-family: 'SFProDisplay-Medium';
+    src: url('./sf-pro-display-medium.otf') format('opentype');
+}
+@font-face {
+    font-family: 'SFProDisplay-Regular';
+    src: url('./sf-pro-display-regular.otf') format('opentype');
+}
 
 /* Center all elements inside chooser */
 .chooser {
@@ -20,7 +28,7 @@ body {
 
 /* Set size to zero when empty */
 #search-container:empty,
-#results:empty,
+#search-results:empty,
 #selected-app:empty {
     width: 0;
     height: 0;
@@ -35,13 +43,14 @@ body {
     margin: 20px;
 }
 
-.results {
+.search-results {
     list-style-type: none;
     margin: 20px;
     padding: 0;
+    width: 80%;
 }
 
-.results li div {
+.search-results li div {
     border: 1px solid #ddd;
     margin-top: -1px; /* Prevent double borders */
     background-color: #f6f6f6;
@@ -49,7 +58,7 @@ body {
     display: flex;
 }
 
-.results li div a {
+.search-results li div a {
     text-decoration: none;
     font-size: 18px;
     color: black;
@@ -59,7 +68,7 @@ body {
     margin-left: 20px;
 }
 
-.results li div img {
+.search-results li div img {
     display: block;
     /* margin: auto; */
     width: 50px;
@@ -67,7 +76,7 @@ body {
     border-radius: 20% / 20%;
 }
 
-.results li div:hover:not(.header) {
+.search-results li div:hover:not(.header) {
     background-color: #eee;
 }
 
@@ -100,10 +109,11 @@ body {
 
 /* Add a smooth transition for better UX */
 #search-container,
-#results,
+#search-results,
 #selected-app {
     transition: all 0.3s ease;
 }
+
 
 /* Add styles for the new app-status element */
 .app-status {

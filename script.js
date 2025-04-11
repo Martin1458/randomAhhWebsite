@@ -8,8 +8,8 @@ function search() {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            const results = document.getElementById('results');
-            results.innerHTML = '';
+            const searchResults = document.getElementById('search-results');
+            searchResults.innerHTML = '';
 
             data.results.forEach(item => {
                 //  <li>
@@ -33,8 +33,8 @@ function search() {
                     event.preventDefault(); // Prevent the link from navigating immediately
                     selectedItem = item; // Save the selected item
                     console.log('Selected item:', selectedItem);
-                    // Clear the seach results and search term
-                    results.innerHTML = '';
+                    // Clear the seach searchResults and search term
+                    searchResults.innerHTML = '';
                     document.getElementById('searchTerm').value = '';
                     select(); // Call select() to display the selected item
                 });
@@ -42,7 +42,7 @@ function search() {
                 itemDiv.appendChild(img);
                 itemDiv.appendChild(a);
                 li.appendChild(itemDiv);
-                results.appendChild(li);
+                searchResults.appendChild(li);
             });
         })
         .catch(error => console.error('Error:', error));
@@ -53,11 +53,11 @@ function search() {
 function select() {
     const searchContainer = document.getElementById('search-container');
     const selectedApp = document.getElementById('selected-app');
-    const results = document.getElementById('results');
+    const searchResults = document.getElementById('search-results');
     const appStatus = document.getElementById('app-status'); // New status element
 
     // Check if the elements exist
-    if (!searchContainer || !selectedApp || !results || !appStatus) {
+    if (!searchContainer || !selectedApp || !searchResults || !appStatus) {
         console.error('Required elements are missing in the DOM.');
         return;
     }
@@ -66,12 +66,12 @@ function select() {
         console.log('Selected item:', selectedItem);
         // Clear the search-container
         searchContainer.innerHTML = '';
-        results.innerHTML = ''; // Clear results
+        searchResults.innerHTML = ''; // Clear searchResults
         // Display the selected-app with a remove button
         selectedApp.innerHTML = `
-            <img src="${selectedItem.artworkUrl100}" alt="${selectedItem.trackName}">
+            <img src="${selectedItem.artworkUrl512}" alt="${selectedItem.trackName}">
             <h2>${selectedItem.trackName}</h2>
-            <button id="removeButton" style="background: none; border: none; font-size: 20px; cursor: pointer;">&times;</button>
+            <button id="removeButton" style="background: none; border: none; font-size: 30px; cursor: pointer;">&times;</button>
         `;
         appStatus.textContent = `Selected app: ${selectedItem.trackName}`; // Update status
         appStatus.style.color = 'green'; // Set status color to green
@@ -93,9 +93,9 @@ function select() {
             <input type="text" id="searchTerm" placeholder="Enter app name">
             <button onclick="search()">Search</button>
         `;
-        // Clear the selected-app and results
+        // Clear the selected-app and searchResults
         selectedApp.innerHTML = '';
-        results.innerHTML = '';
+        searchResults.innerHTML = '';
         appStatus.textContent = 'No app selected'; // Reset status
         appStatus.style.color = 'red'; // Set status color to red
     }
@@ -153,3 +153,86 @@ function loadGalleryImages() {
 
 // Call this function when the page loads to populate the gallery
 loadGalleryImages();
+
+// Customize the svg
+const svg_notification = document.getElementById('svg-notification');
+const svg_notification_title = document.getElementById('svg-notification-title');
+const svg_notification_time_text = document.getElementById('svg-notification-time-text');
+const svg_notification_time_now = document.getElementById('svg-notification-time-now'); 
+const svg_notification_description = document.getElementById('svg-notification-description');
+const svg_notification_description_sec = document.getElementById('svg-notification-description-sec');
+const svg_notification_icon = document.getElementById('svg-notification-icon');
+
+const notification_text = document.getElementById('notification-text');
+function update_notification() {
+    svg_notification_title.textContent = selectedItem.trackName;
+    svg_notification_time_text.textContent = "Time Text";
+    svg_notification_time_now.textContent = "Now";
+
+    // Get the text from the textarea
+    const fullText = notification_text.value;
+    const maxWidth = 800; // Set the maximum width for the first line
+    const maxWidthSec = 800; // Set the maximum width for the second line
+
+    // Get references to the first and second lines
+    const firstLine = svg_notification_description;
+    const secondLine = svg_notification_description_sec;
+
+    // Set the full text to the first line initially
+    const firstLineText = document.createTextNode(fullText);
+    firstLine.textContent = '<tspan id="svg-notification-description-sec" x="173" y="179">iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii</tspan>'; // Clear the parent text content
+    firstLine.appendChild(firstLineText); // Add the first line text
+
+    // Measure the width of the first line
+    let descriptionBBox = firstLine.getBBox();
+    if (descriptionBBox.width > maxWidth) {
+        // If the text is too wide, split it
+        let splitIndex = fullText.length;
+        while (splitIndex > 0) {
+            firstLineText.textContent = fullText.slice(0, splitIndex);
+            descriptionBBox = firstLine.getBBox();
+            if (descriptionBBox.width <= maxWidth) break;
+            splitIndex--;
+        }
+
+        // Set the remaining text to the second line
+        const remainingText = fullText.slice(splitIndex).trim();
+        //secondLine.textContent = remainingText;
+
+        // Measure the width of the second line
+        let descriptionSecBBox = secondLine.getBBox();
+        if (descriptionSecBBox.width > maxWidthSec && false) {
+            // If the second line is also too wide, truncate it and add "..."
+            let secSplitIndex = remainingText.length;
+            while (secSplitIndex > 0) {
+                secondLine.textContent = remainingText.slice(0, secSplitIndex) + '...';
+                descriptionSecBBox = secondLine.getBBox();
+                if (descriptionSecBBox.width <= maxWidthSec) break;
+                secSplitIndex--;
+            }
+        }
+    } else {
+        // If the text fits, clear the second line
+        secondLine.textContent = '';
+    }
+
+    // Update the image
+    if (selectedItem) {
+        console.log("Selected item:", selectedItem);
+
+        const artworkUrl = selectedItem.artworkUrl512 || selectedItem.artworkUrl100 || './images/placeholder.png';
+        const cacheBusterUrl = `${artworkUrl}?t=${new Date().getTime()}`; // Add cache buster
+        console.log("Setting href with cache buster:", cacheBusterUrl);
+
+        svg_notification_icon.setAttributeNS('http://www.w3.org/1999/xlink', 'href', cacheBusterUrl);
+
+        // Force a redraw
+        const parent = svg_notification_icon.parentNode;
+        parent.removeChild(svg_notification_icon);
+        parent.appendChild(svg_notification_icon);
+
+        console.log("Current href:", svg_notification_icon.getAttributeNS('http://www.w3.org/1999/xlink', 'href'));
+    } else {
+        console.error("No selected item available.");
+    }
+}
