@@ -172,48 +172,63 @@ function update_notification() {
     // Get the text from the textarea
     const fullText = notification_text.value;
     const maxWidth = 800; // Set the maximum width for the first line
-    const maxWidthSec = 800; // Set the maximum width for the second line
-
-    // Get references to the first and second lines
-    const firstLine = svg_notification_description;
-    const secondLine = svg_notification_description_sec;
-
-    // Set the full text to the first line initially
-    const firstLineText = document.createTextNode(fullText);
-    firstLine.textContent = '<tspan id="svg-notification-description-sec" x="173" y="179">iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii</tspan>'; // Clear the parent text content
-    firstLine.appendChild(firstLineText); // Add the first line text
-
-    // Measure the width of the first line
-    let descriptionBBox = firstLine.getBBox();
+    const maxWidthSecondLine = 800; // Set the maximum width for the second line
+    
+    // Get reference to the description text element
+    const descriptionElement = svg_notification_description;
+    
+    // Clear all children from the description element
+    while (descriptionElement.firstChild) {
+        descriptionElement.removeChild(descriptionElement.firstChild);
+    }
+    
+    // Split the text into two lines if necessary
+    let splitIndex = fullText.length;
+    let firstLineText = fullText;
+    let secondLineText = '';
+    
+    // Measure the width of the first line and split if necessary
+    const tempTextNode = document.createTextNode(fullText);
+    descriptionElement.appendChild(tempTextNode);
+    let descriptionBBox = descriptionElement.getBBox();
+    
     if (descriptionBBox.width > maxWidth) {
-        // If the text is too wide, split it
-        let splitIndex = fullText.length;
         while (splitIndex > 0) {
-            firstLineText.textContent = fullText.slice(0, splitIndex);
-            descriptionBBox = firstLine.getBBox();
+            tempTextNode.textContent = fullText.slice(0, splitIndex);
+            descriptionBBox = descriptionElement.getBBox();
             if (descriptionBBox.width <= maxWidth) break;
             splitIndex--;
         }
-
-        // Set the remaining text to the second line
-        const remainingText = fullText.slice(splitIndex).trim();
-        //secondLine.textContent = remainingText;
-
-        // Measure the width of the second line
-        let descriptionSecBBox = secondLine.getBBox();
-        if (descriptionSecBBox.width > maxWidthSec && false) {
-            // If the second line is also too wide, truncate it and add "..."
-            let secSplitIndex = remainingText.length;
-            while (secSplitIndex > 0) {
-                secondLine.textContent = remainingText.slice(0, secSplitIndex) + '...';
-                descriptionSecBBox = secondLine.getBBox();
-                if (descriptionSecBBox.width <= maxWidthSec) break;
-                secSplitIndex--;
+        firstLineText = fullText.slice(0, splitIndex).trim();
+        secondLineText = fullText.slice(splitIndex).trim();
+    }
+    
+    // Set the first line as the text content of the <text> element
+    descriptionElement.textContent = firstLineText;
+    
+    // Create the second line <tspan> if there is remaining text
+    if (secondLineText) {
+        const secondLineTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+        secondLineTspan.setAttribute('x', '173'); // Align with the first line
+        secondLineTspan.setAttribute('y', '179'); // Adjust the y-coordinate for the second line
+    
+        // Measure the width of the second line and truncate if necessary
+        const tempSecondTextNode = document.createTextNode(secondLineText);
+        secondLineTspan.appendChild(tempSecondTextNode);
+        descriptionElement.appendChild(secondLineTspan);
+        let secondLineBBox = secondLineTspan.getBBox();
+    
+        if (secondLineBBox.width > maxWidthSecondLine) {
+            let secondSplitIndex = secondLineText.length;
+            while (secondSplitIndex > 0) {
+                tempSecondTextNode.textContent = secondLineText.slice(0, secondSplitIndex) + '...';
+                secondLineBBox = secondLineTspan.getBBox();
+                if (secondLineBBox.width <= maxWidthSecondLine) break;
+                secondSplitIndex--;
             }
         }
-    } else {
-        // If the text fits, clear the second line
-        secondLine.textContent = '';
+    
+        secondLineTspan.textContent = tempSecondTextNode.textContent; // Set the truncated text
     }
 
     // Update the image
@@ -224,14 +239,14 @@ function update_notification() {
         const cacheBusterUrl = `${artworkUrl}?t=${new Date().getTime()}`; // Add cache buster
         console.log("Setting href with cache buster:", cacheBusterUrl);
 
-        svg_notification_icon.setAttributeNS('http://www.w3.org/1999/xlink', 'href', cacheBusterUrl);
+        svg_notification_icon.setAttribute('href', cacheBusterUrl);
 
         // Force a redraw
         const parent = svg_notification_icon.parentNode;
         parent.removeChild(svg_notification_icon);
         parent.appendChild(svg_notification_icon);
 
-        console.log("Current href:", svg_notification_icon.getAttributeNS('http://www.w3.org/1999/xlink', 'href'));
+        console.log("Current href:", svg_notification_icon.getAttribute('href'));
     } else {
         console.error("No selected item available.");
     }
