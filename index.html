@@ -25,8 +25,8 @@
     <h2>Background image:</h2>
     <div id="chooser" class="chooser">
         <div class="tabs">
-            <button class="tab-button active" onclick="showTab('upload-tab')">Upload Image</button>
-            <button class="tab-button" onclick="showTab('gallery-tab')">Choose from Gallery</button>
+            <button class="tab-button active" onclick="showTab('upload-tab', 'gallery-tab')">Upload Image</button>
+            <button class="tab-button" onclick="showTab('gallery-tab', 'upload-tab')">Choose from Gallery</button>
         </div>
     
         <div id="upload-tab" class="tab-content active">
@@ -39,6 +39,21 @@
         <h3>Preview:</h3>
         <img id="image-preview" class="image-preview" src="#" alt="your image" />
     </div>
+    <h2>Notification time:</h2>
+    <div id="chooser" class="chooser">
+        <div class="tabs"> 
+            <button class="tab-button active" onclick="showTab('now-time-tab', 'custom-time-tab')">Now</button>
+            <button class="tab-button" onclick="showTab('custom-time-tab', 'now-time-tab')">Custom Time</button>
+        </div>
+        <div id="now-time-tab" class="tab-content active">
+            <input type="checkbox" id="now-checkbox" class="now-checkbox" checked disabled>
+            <label for="now-checkbox">Now</label>
+        </div>
+        <div id="custom-time-tab" class="tab-content">
+            <input type="text" id="custom-time" class="custom-time" value="3h ago">
+            <label for="custom-time">Custom Time</label>
+        </div>
+    </div>
     <h2>Generate:</h2>
     <div id="chooser" class="chooser">
         <button id="generate-button" class="generate-button" onclick="update_notification()">Generate Notification</button>
@@ -47,6 +62,10 @@
     <h2>Result:</h2>
     <div id="chooser" class="chooser">
         <svg id="svg-notification" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1065.25 226.25">
+            <!-- Add the background image -->
+            <image id="background-image" href="https://is1-ssl.mzstatic.com/image/thumb/Purple62/v4/22/5d/29/225d2939-0976-a18e-6806-9f7f72010bde/AppIcon-1x_U007emarketing-85-220-9.png/512x512bb.jpg" 
+            x="0" y="0" width="1065.25" height="226.25" preserveAspectRatio="xMidYMid slice" />
+
             <rect id="Background" x=".12" y=".12" width="1065" height="226" rx="65" ry="54" fill="rgba(255, 255, 255, .45)"/>
 
             <!-- Define a clipPath for rounded corners -->

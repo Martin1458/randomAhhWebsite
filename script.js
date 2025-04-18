@@ -103,30 +103,74 @@ function select() {
 
 select(); // Call select() to initialize the UI
 
-function showTab(tabId) {
-    // Hide all tab contents
-    const tabContents = document.querySelectorAll('.tab-content');
-    tabContents.forEach(content => content.classList.remove('active'));
+function showTab(tabId, hideId) {
+    // Remove active class from the tab specified by hideId
+    if (hideId) {
+        const hideElement = document.getElementById(hideId);
+        if (hideElement) {
+            hideElement.classList.remove('active');
+        }
+    }
+
+    // Show the selected tab content
+    const tabElement = document.getElementById(tabId);
+    if (tabElement) {
+        tabElement.classList.add('active');
+    }
 
     // Remove active class from all tab buttons
-    const tabButtons = document.querySelectorAll('.tab-button');
-    tabButtons.forEach(button => button.classList.remove('active'));
+    const deactivateButton = document.querySelector(`.tab-button[onclick="showTab('${hideId}', '${tabId}')"]`);
+    if (deactivateButton) {
+        deactivateButton.classList.remove('active');
+    }
 
-    // Show the selected tab content and activate the corresponding button
-    document.getElementById(tabId).classList.add('active');
-    document.querySelector(`.tab-button[onclick="showTab('${tabId}')"]`).classList.add('active');
+    // Activate the corresponding button for the selected tab
+    const activeButton = document.querySelector(`.tab-button[onclick="showTab('${tabId}', '${hideId}')"]`);
+    if (activeButton) {
+        activeButton.classList.add('active');
+    }
 }
 
 // Manage input image
 const inputImage = document.getElementById('input-image');
 const imagePreview = document.getElementById('image-preview');
+
 inputImage.onchange = evt => {
     const [file] = inputImage.files;
     if (file) {
         imagePreview.src = URL.createObjectURL(file);
+
+        // Update the SVG background image
+        const svgBackgroundImage = document.getElementById('svg image');
+        console.log("SVG Background Image:", svgBackgroundImage);
+        if (svgBackgroundImage) {
+            const img = document.createElement('image-preview');
+
+            svgBackgroundImage.setAttribute('href', URL.createObjectURL(img.src));
+            console.log("Setting href:", URL.createObjectURL(img.src));
+        } else {
+            console.error('SVG background image element not found.');
+        }
+        // Force a redraw
+        const parent = svgBackgroundImage.parentNode;
+        parent.removeChild(svgBackgroundImage);
+        parent.appendChild(svgBackgroundImage);
     }
 };
-
+function updateSvgBackground(imagePath) {
+    const svgBackgroundImage = document.getElementById('background-image');
+    console.log("SVG Background Image:", svgBackgroundImage);
+    if (svgBackgroundImage) {
+        svgBackgroundImage.setAttribute('href', imagePath);
+        console.log("Setting href:", imagePath);
+    } else {
+        console.error('SVG background image element not found.');
+    }
+    // Force a redraw
+    //const parent = svgBackgroundImage.parentNode;
+    //parent.removeChild(svgBackgroundImage);
+    //parent.appendChild(svgBackgroundImage);
+}
 // Dynamically load images from the ./images/ directory into the gallery
 function loadGalleryImages() {
     const gallery = document.getElementById('image-gallery');
@@ -146,6 +190,7 @@ function loadGalleryImages() {
         img.addEventListener('click', () => {
             console.log(`Selected image: ${imagePath}`);
             imagePreview.src = imagePath;
+            updateSvgBackground(imagePath); // Update the SVG background image
         });
         gallery.appendChild(img);
     });
@@ -166,8 +211,7 @@ const svg_notification_icon = document.getElementById('svg-notification-icon');
 const notification_text = document.getElementById('notification-text');
 function update_notification() {
     svg_notification_title.textContent = selectedItem.trackName;
-    svg_notification_time_text.textContent = "Time Text";
-    svg_notification_time_now.textContent = "Now";
+    
 
     // Get the text from the textarea
     const fullText = notification_text.value;
@@ -249,5 +293,17 @@ function update_notification() {
         console.log("Current href:", svg_notification_icon.getAttribute('href'));
     } else {
         console.error("No selected item available.");
+    }
+
+    // Update the notification time
+    const time_custom_input = document.getElementById('custom-time');
+    if (time_custom_input) {
+        svg_notification_time_text.textContent = time_custom_input.value;
+        svg_notification_time_now.textContent = "";
+    }
+    const time_now_tab = document.getElementById('now-time-tab');
+    if (time_now_tab.classList.contains('active')) {
+        svg_notification_time_text.textContent = "";
+        svg_notification_time_now.textContent = "now";
     }
 }
