@@ -158,6 +158,9 @@ inputImage.onchange = evt => {
     }
 };
 function updateSvgBackground(imagePath) {
+    const daSvg = document.getElementById('svg-notification');
+    daSvg.setAttribute('viewBox', '0 0 '+ imageWidth + ' '+ imageHeight);
+
     const svgBackgroundImage = document.getElementById('background-image');
     console.log("SVG Background Image:", svgBackgroundImage);
     if (svgBackgroundImage) {
@@ -171,6 +174,10 @@ function updateSvgBackground(imagePath) {
     //parent.removeChild(svgBackgroundImage);
     //parent.appendChild(svgBackgroundImage);
 }
+
+let imageWidth = 0;
+let imageHeight = 0;
+
 // Dynamically load images from the ./images/ directory into the gallery
 function loadGalleryImages() {
     const gallery = document.getElementById('image-gallery');
@@ -191,6 +198,17 @@ function loadGalleryImages() {
             console.log(`Selected image: ${imagePath}`);
             imagePreview.src = imagePath;
             updateSvgBackground(imagePath); // Update the SVG background image
+            // Create a new Image object to load the selected image
+            const img = new Image();
+            img.src = imagePath;
+
+            // Once the image is loaded, save its width and height
+            img.onload = () => {
+                imageWidth = img.width;
+                imageHeight = img.height;
+                console.log(`Image dimensions: ${imageWidth}x${imageHeight}`);
+                // You can store these dimensions in a variable or use them as needed
+};
         });
         gallery.appendChild(img);
     });
