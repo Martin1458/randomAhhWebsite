@@ -7,11 +7,11 @@ body {
 }
 @font-face {
     font-family: 'SFProDisplay-Medium';
-    src: url('./sf-pro-display-medium.otf') format('opentype');
+    src: url('./fonts/sf-pro-display-medium.otf') format('opentype');
 }
 @font-face {
     font-family: 'SFProDisplay-Regular';
-    src: url('./sf-pro-display-regular.otf') format('opentype');
+    src: url('./fonts/sf-pro-display-regular.otf') format('opentype');
 }
 
 /* Center all elements inside chooser */

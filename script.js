@@ -157,7 +157,7 @@ inputImage.onchange = evt => {
         parent.appendChild(svgBackgroundImage);
     }
 };
-function updateSvgBackground(imagePath) {
+function updateSvgBackground(imagePath, imageWidth, imageHeight) {
     const daSvg = document.getElementById('svg-notification');
     daSvg.setAttribute('viewBox', '0 0 '+ imageWidth + ' '+ imageHeight);
 
@@ -165,6 +165,8 @@ function updateSvgBackground(imagePath) {
     console.log("SVG Background Image:", svgBackgroundImage);
     if (svgBackgroundImage) {
         svgBackgroundImage.setAttribute('href', imagePath);
+        svgBackgroundImage.setAttribute('width', imageWidth);
+        svgBackgroundImage.setAttribute('height', imageHeight);
         console.log("Setting href:", imagePath);
     } else {
         console.error('SVG background image element not found.');
@@ -182,12 +184,8 @@ let imageHeight = 0;
 function loadGalleryImages() {
     const gallery = document.getElementById('image-gallery');
     const images = [
-        './images/image1.jpg',
-        './images/image2.jpg',
-        './images/image3.jpg',
-        './images/image4.jpg',
-        './images/image5.jpg',
-        './images/image6.jpg'
+        './images/IMG_6363.PNG',
+        './images/IMG_6364.PNG'   
     ]; 
 
     images.forEach(imagePath => {
@@ -197,15 +195,15 @@ function loadGalleryImages() {
         img.addEventListener('click', () => {
             console.log(`Selected image: ${imagePath}`);
             imagePreview.src = imagePath;
-            updateSvgBackground(imagePath); // Update the SVG background image
             // Create a new Image object to load the selected image
             const img = new Image();
             img.src = imagePath;
-
+            
             // Once the image is loaded, save its width and height
             img.onload = () => {
                 imageWidth = img.width;
                 imageHeight = img.height;
+                updateSvgBackground(imagePath, imageWidth, imageHeight); // Update the SVG background image
                 console.log(`Image dimensions: ${imageWidth}x${imageHeight}`);
                 // You can store these dimensions in a variable or use them as needed
 };
@@ -227,6 +225,9 @@ const svg_notification_description_sec = document.getElementById('svg-notificati
 const svg_notification_icon = document.getElementById('svg-notification-icon');
 
 const notification_text = document.getElementById('notification-text');
+
+const notification_group = document.getElementById('notification-group');
+const notification_background_image = document.getElementById('background-image');
 function update_notification() {
     svg_notification_title.textContent = selectedItem.trackName;
     
@@ -324,4 +325,21 @@ function update_notification() {
         svg_notification_time_text.textContent = "";
         svg_notification_time_now.textContent = "now";
     }
+
+    //get background image width and height
+    let backgroundImageWidth = notification_background_image.getAttribute('width');
+    let backgroundImageHeight = notification_background_image.getAttribute('height');
+
+    let notificationWidth = 1065;
+    let notificationHeight = 226;
+
+    let ratio = (backgroundImageWidth / notificationWidth)*0.95;
+
+    let newNotificationWidth = notificationWidth * ratio;
+    let offsetX = (backgroundImageWidth - newNotificationWidth) / 2;
+    let offsetY = (160/backgroundImageHeight)
+
+    notification_group.setAttribute("transform", "scale("+ratio+") translate("+offsetX+", "+offsetY+")");
+    console.log("ratio", ratio);
+
 }
