@@ -337,7 +337,7 @@ function update_notification() {
 
     let newNotificationWidth = notificationWidth * ratio;
     let offsetX = (backgroundImageWidth - newNotificationWidth) / 2;
-    let offsetY = (160/backgroundImageHeight)
+    let offsetY = (160/backgroundImageHeight);
 
     notification_group.setAttribute("transform", "scale("+ratio+") translate("+offsetX+", "+offsetY+")");
     console.log("ratio", ratio);
