@@ -62,36 +62,42 @@
     <h2>Result:</h2>
     <div id="chooser" class="chooser">
         <svg id="svg-notification" data-name="Layer 2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1065.25 226.25">
+            <!-- Define a filter for the blur effect -->
+            <defs>
+                <filter id="blur-background" x="0" y="0" width="100%" height="100%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="blur" />
+                    <feComposite operator="in" in2="SourceGraphic"/>
+                </filter>
+            </defs>
             <!-- Add the background image -->
             <image id="background-image" href="https://is1-ssl.mzstatic.com/image/thumb/Purple62/v4/22/5d/29/225d2939-0976-a18e-6806-9f7f72010bde/AppIcon-1x_U007emarketing-85-220-9.png/512x512bb.jpg" 
             x="0" y="0" width="1065.25" height="226.25" rx="65" ry="54" preserveAspectRatio="xMidYMid slice" />
 
             <g id="notification-group" transform="scale(1)"> <!-- !Use this scale and transform to center the notification -->
-                <rect id="Background" x=".12" y=".12" width="1065" height="226" rx="65" ry="54" fill="rgba(255, 255, 255, .45)"/>
+                <rect id="Background" x=".12" y=".12" width="1065" height="185" rx="65" ry="54" fill="rgba(255, 255, 255, .9)" filter="url(#blur-background)"/>
             
                 <!-- Define a clipPath for rounded corners -->
                 <defs>
                     <clipPath id="rounded-corners">
-                        <rect x="30.12" y="56.12" width="114" height="114" rx="29" ry="29" />
+                        <rect x="32" y="39" width="110" height="110" rx="29" ry="29" />
                     </clipPath>
                 </defs>
                 
                 <!-- Add the image with the clipPath applied -->
                 <image id="svg-notification-icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple62/v4/22/5d/29/225d2939-0976-a18e-6806-9f7f72010bde/AppIcon-1x_U007emarketing-85-220-9.png/512x512bb.jpg" 
-                        x="30.12" y="56.12" width="114" height="114" clip-path="url(#rounded-corners)" />
+                        x="32" y="39" width="110" height="110" clip-path="url(#rounded-corners)" />
                 
-                <text id="svg-notification-title" x="173" y="75" font-family="SFProDisplay-Medium" font-size="45" fill="#ffffff" letter-spacing="1">
-                    Rented bike 930326
+                <text id="svg-notification-title" x="173" y="79" font-family="SFProDisplay-Medium" font-size="45" fill="#ffffff" letter-spacing="1">
+                    App Title
                 </text>
-                <text id="svg-notification-time-text" x="900" y="75" font-family="SFProDisplay-Regular" font-size="40" fill="#405769" letter-spacing="1">
-                    
+                <text id="svg-notification-time-text" x="899" y="75" font-family="SFProDisplay-Regular" font-size="40" fill="#8ca996" letter-spacing="1">
                 </text>
-                <text id="svg-notification-time-now" x="950" y="75" font-family="SFProDisplay-Regular" font-size="40" fill="#405769" letter-spacing="1">
+                <text id="svg-notification-time-now" x="949" y="75" font-family="SFProDisplay-Regular" font-size="40" fill="#8ca996" letter-spacing="1">
                     now
                 </text>
-                <text id="svg-notification-description" x="173" y="129" font-family="SFProDisplay-Regular" font-size="45" fill="#ffffff" letter-spacing="1">
-                    Bike returned. Duration: 4 Minutes. Price: 
-                    <tspan id="svg-notification-description-sec" x="173" y="179">iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii</tspan>
+                <text id="svg-notification-description" x="173" y="133" font-family="SFProDisplay-Regular" font-size="45" fill="#ffffff" letter-spacing="1">
+                    Description fisrt line 
+                    <tspan id="svg-notification-description-sec" x="173" y="183" font-size="45" fill="#ffffff" letter-spacing="1">Description second line</tspan>
                 </text>
             </g>
             

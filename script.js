@@ -229,6 +229,7 @@ const notification_text = document.getElementById('notification-text');
 const notification_group = document.getElementById('notification-group');
 const notification_background_image = document.getElementById('background-image');
 function update_notification() {
+
     svg_notification_title.textContent = selectedItem.trackName;
     
 
@@ -337,7 +338,7 @@ function update_notification() {
 
     let newNotificationWidth = notificationWidth * ratio;
     let offsetX = (backgroundImageWidth - newNotificationWidth) / 2;
-    let offsetY = (160/backgroundImageHeight);
+    let offsetY = backgroundImageHeight*0.063+200;
 
     notification_group.setAttribute("transform", "scale("+ratio+") translate("+offsetX+", "+offsetY+")");
     console.log("ratio", ratio);

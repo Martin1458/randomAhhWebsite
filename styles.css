@@ -182,8 +182,8 @@ body {
 .image-preview {
     display: flex;
     justify-content: center;
-    max-width: 90%;
-    max-height: 90%;
+    max-width: 300px;
+    max-height: 300px;
     border: #333 3px solid;
 } 
 
