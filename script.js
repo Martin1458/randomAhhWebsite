@@ -103,7 +103,7 @@ function select() {
 
 select(); // Call select() to initialize the UI
 
-function showTab(tabId, hideId) {
+function show_tab(tabId, hideId) {
     // Remove active class from the tab specified by hideId
     if (hideId) {
         const hideElement = document.getElementById(hideId);
@@ -119,13 +119,13 @@ function showTab(tabId, hideId) {
     }
 
     // Remove active class from all tab buttons
-    const deactivateButton = document.querySelector(`.tab-button[onclick="showTab('${hideId}', '${tabId}')"]`);
+    const deactivateButton = document.querySelector(`.tab-button[onclick="show_tab('${hideId}', '${tabId}')"]`);
     if (deactivateButton) {
         deactivateButton.classList.remove('active');
     }
 
     // Activate the corresponding button for the selected tab
-    const activeButton = document.querySelector(`.tab-button[onclick="showTab('${tabId}', '${hideId}')"]`);
+    const activeButton = document.querySelector(`.tab-button[onclick="show_tab('${tabId}', '${hideId}')"]`);
     if (activeButton) {
         activeButton.classList.add('active');
     }
@@ -157,31 +157,26 @@ inputImage.onchange = evt => {
         parent.appendChild(svgBackgroundImage);
     }
 };
-function updateSvgBackground(imagePath, imageWidth, imageHeight) {
-    const daSvg = document.getElementById('svg-notification');
-    daSvg.setAttribute('viewBox', '0 0 '+ imageWidth + ' '+ imageHeight);
 
+let imageWidth = 0;
+let imageHeight = 0;
+const svg_notification = document.getElementById('svg-notification');
+
+function update_svg_background(imagePath, imageWidth, imageHeight) {
+    svg_notification.setAttribute('viewBox', '0 0 '+ imageWidth + ' '+ imageHeight);
     const svgBackgroundImage = document.getElementById('background-image');
     console.log("SVG Background Image:", svgBackgroundImage);
-    if (svgBackgroundImage) {
-        svgBackgroundImage.setAttribute('href', imagePath);
-        svgBackgroundImage.setAttribute('width', imageWidth);
-        svgBackgroundImage.setAttribute('height', imageHeight);
+    if (notificationBackgroundImage) {
+        notificationBackgroundImage.setAttribute('href', imagePath);
+        notificationBackgroundImage.setAttribute('width', imageWidth);
+        notificationBackgroundImage.setAttribute('height', imageHeight);
         console.log("Setting href:", imagePath);
     } else {
         console.error('SVG background image element not found.');
     }
-    // Force a redraw
-    //const parent = svgBackgroundImage.parentNode;
-    //parent.removeChild(svgBackgroundImage);
-    //parent.appendChild(svgBackgroundImage);
 }
-
-let imageWidth = 0;
-let imageHeight = 0;
-
 // Dynamically load images from the ./images/ directory into the gallery
-function loadGalleryImages() {
+function load_gallery_images() {
     const gallery = document.getElementById('image-gallery');
     const images = [
         './images/IMG_6363.PNG',
@@ -203,7 +198,7 @@ function loadGalleryImages() {
             img.onload = () => {
                 imageWidth = img.width;
                 imageHeight = img.height;
-                updateSvgBackground(imagePath, imageWidth, imageHeight); // Update the SVG background image
+                update_svg_background(imagePath, imageWidth, imageHeight); // Update the SVG background image
                 console.log(`Image dimensions: ${imageWidth}x${imageHeight}`);
                 // You can store these dimensions in a variable or use them as needed
 };
@@ -213,75 +208,73 @@ function loadGalleryImages() {
 }
 
 // Call this function when the page loads to populate the gallery
-loadGalleryImages();
+load_gallery_images();
 
 // Customize the svg
-const svg_notification = document.getElementById('svg-notification');
-const svg_notification_title = document.getElementById('svg-notification-title');
-const svg_notification_time_text = document.getElementById('svg-notification-time-text');
-const svg_notification_time_now = document.getElementById('svg-notification-time-now'); 
-const svg_notification_description = document.getElementById('svg-notification-description');
-const svg_notification_description_sec = document.getElementById('svg-notification-description-sec');
-const svg_notification_icon = document.getElementById('svg-notification-icon');
+const svgNotificationTitle = document.getElementById('svg-notification-title');
+const svgNotificationTimeText = document.getElementById('svg-notification-time-text');
+const svgNotificationTimeNow = document.getElementById('svg-notification-time-now'); 
+const svgNotificationDescription = document.getElementById('svg-notification-description');
+const svgNotificationDescriptionSec = document.getElementById('svg-notification-description-sec');
+const svgNotificationIcon = document.getElementById('svg-notification-icon');
 
 const notification_text = document.getElementById('notification-text');
 
-const notification_group = document.getElementById('notification-group');
-const notification_background_image = document.getElementById('background-image');
+const notificationGroup = document.getElementById('notification-group');
+const notificationBackgroundImage = document.getElementById('background-image');
 function update_notification() {
-
-    svg_notification_title.textContent = selectedItem.trackName;
-    
-
     // Get the text from the textarea
-    const fullText = notification_text.value;
-    const maxWidth = 800; // Set the maximum width for the first line
-    const maxWidthSecondLine = 800; // Set the maximum width for the second line
+    update_notification_text(selectedItem.trackName, notification_text.value);
     
-    // Get reference to the description text element
-    const descriptionElement = svg_notification_description;
+    // Update the image
+    let artworkUrl = selectedItem.artworkUrl512 || selectedItem.artworkUrl100 || './images/placeholder.png';
+    update_notification_icon(artworkUrl);
     
+    
+    // Update the notification time
+    const timeNowTab = document.getElementById('now-time-tab');
+    const timeCustomInput = document.getElementById('custom-time');
+    update_notification_time(timeNowTab.classList.contains('active'), timeCustomInput.value);
+
+    //get background image width and height
+    let backgroundImageWidth = notificationBackgroundImage.getAttribute('width');
+    let backgroundImageHeight = notificationBackgroundImage.getAttribute('height');
+
+    update_notification_transform(backgroundImageWidth, backgroundImageHeight);
+}
+
+function update_notification_text(title, description="") {
+    svgNotificationTitle.textContent = title;
+    
+    if (description) {
+        update_notification_description(description);
+    }
+}
+
+function update_notification_description(description) {
     // Clear all children from the description element
-    while (descriptionElement.firstChild) {
-        descriptionElement.removeChild(descriptionElement.firstChild);
+    while (svgNotificationDescription.firstChild) {
+        svgNotificationDescription.removeChild(svgNotificationDescription.firstChild);
     }
     
-    // Split the text into two lines if necessary
-    let splitIndex = fullText.length;
-    let firstLineText = fullText;
-    let secondLineText = '';
-    
-    // Measure the width of the first line and split if necessary
-    const tempTextNode = document.createTextNode(fullText);
-    descriptionElement.appendChild(tempTextNode);
-    let descriptionBBox = descriptionElement.getBBox();
-    
-    if (descriptionBBox.width > maxWidth) {
-        while (splitIndex > 0) {
-            tempTextNode.textContent = fullText.slice(0, splitIndex);
-            descriptionBBox = descriptionElement.getBBox();
-            if (descriptionBBox.width <= maxWidth) break;
-            splitIndex--;
-        }
-        firstLineText = fullText.slice(0, splitIndex).trim();
-        secondLineText = fullText.slice(splitIndex).trim();
-    }
-    
+    const maxWidth = 800; 
+    let [firstLineText, secondLineText] = split_text(description, maxWidth);
+
     // Set the first line as the text content of the <text> element
-    descriptionElement.textContent = firstLineText;
+    svgNotificationDescription.textContent = firstLineText;
     
     // Create the second line <tspan> if there is remaining text
     if (secondLineText) {
         const secondLineTspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
         secondLineTspan.setAttribute('x', '173'); // Align with the first line
         secondLineTspan.setAttribute('y', '179'); // Adjust the y-coordinate for the second line
-    
+
         // Measure the width of the second line and truncate if necessary
         const tempSecondTextNode = document.createTextNode(secondLineText);
         secondLineTspan.appendChild(tempSecondTextNode);
-        descriptionElement.appendChild(secondLineTspan);
+        svgNotificationDescription.appendChild(secondLineTspan);
         let secondLineBBox = secondLineTspan.getBBox();
-    
+
         if (secondLineBBox.width > maxWidthSecondLine) {
             let secondSplitIndex = secondLineText.length;
             while (secondSplitIndex > 0) {
@@ -291,56 +284,62 @@ function update_notification() {
                 secondSplitIndex--;
             }
         }
-    
+        
         secondLineTspan.textContent = tempSecondTextNode.textContent; // Set the truncated text
     }
+}
 
-    // Update the image
-    if (selectedItem) {
-        console.log("Selected item:", selectedItem);
-
-        const artworkUrl = selectedItem.artworkUrl512 || selectedItem.artworkUrl100 || './images/placeholder.png';
-        const cacheBusterUrl = `${artworkUrl}?t=${new Date().getTime()}`; // Add cache buster
-        console.log("Setting href with cache buster:", cacheBusterUrl);
-
-        svg_notification_icon.setAttribute('href', cacheBusterUrl);
-
-        // Force a redraw
-        const parent = svg_notification_icon.parentNode;
-        parent.removeChild(svg_notification_icon);
-        parent.appendChild(svg_notification_icon);
-
-        console.log("Current href:", svg_notification_icon.getAttribute('href'));
-    } else {
-        console.error("No selected item available.");
+function split_text(text, maxWidth) {
+    // Split the text into two lines if necessary
+    let splitIndex = text.length;
+    let firstLine = text;
+    let secondLine = '';
+    
+    // Measure the width of the first line and split if necessary
+    const tempTextNode = document.createTextNode(text);
+    svgNotificationDescription.appendChild(tempTextNode);
+    let descriptionBBox = svgNotificationDescription.getBBox();
+    
+    if (descriptionBBox.width > maxWidth) {
+        while (splitIndex > 0) {
+            tempTextNode.textContent = text.slice(0, splitIndex);
+            descriptionBBox = svgNotificationDescription.getBBox();
+            if (descriptionBBox.width <= maxWidth) break;
+            splitIndex--;
+        }
+        firstLine = text.slice(0, splitIndex).trim();
+        secondLine = text.slice(splitIndex).trim();
     }
+    return [firstLine, secondLine];
+}
 
-    // Update the notification time
-    const time_custom_input = document.getElementById('custom-time');
-    if (time_custom_input) {
-        svg_notification_time_text.textContent = time_custom_input.value;
-        svg_notification_time_now.textContent = "";
-    }
-    const time_now_tab = document.getElementById('now-time-tab');
-    if (time_now_tab.classList.contains('active')) {
-        svg_notification_time_text.textContent = "";
-        svg_notification_time_now.textContent = "now";
-    }
+function update_notification_icon(artworkUrl){
+    svgNotificationIcon.setAttribute('href', artworkUrl);
+}
 
-    //get background image width and height
-    let backgroundImageWidth = notification_background_image.getAttribute('width');
-    let backgroundImageHeight = notification_background_image.getAttribute('height');
-
+function update_notification_transform(backgroundImageWidth, backgroundImageHeight) {
     let notificationWidth = 1065;
     let notificationHeight = 226;
-
+    
     let ratio = (backgroundImageWidth / notificationWidth)*0.95;
-
+    
     let newNotificationWidth = notificationWidth * ratio;
     let offsetX = (backgroundImageWidth - newNotificationWidth) / 2;
     let offsetY = backgroundImageHeight*0.063+200;
+    
+    set_notification_transform(offsetX, offsetY, ratio);
+}
 
-    notification_group.setAttribute("transform", "scale("+ratio+") translate("+offsetX+", "+offsetY+")");
-    console.log("ratio", ratio);
+function set_notification_transform(offsetX, offsetY, scale) {
+    notificationGroup.setAttribute("transform", "scale("+scale+") translate("+offsetX+", "+offsetY+")");
+}
 
+function update_notification_time(nowBool, custom=""){
+    if (nowBool) {
+        svgNotificationTimeText.textContent = "";
+        svgNotificationTimeNow.textContent = "now";
+    } else {
+        svgNotificationTimeText.textContent = custom;
+        svgNotificationTimeNow.textContent = "";
+    }
 }

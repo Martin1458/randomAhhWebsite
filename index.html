@@ -25,8 +25,8 @@
     <h2>Background image:</h2>
     <div id="chooser" class="chooser">
         <div class="tabs">
-            <button class="tab-button active" onclick="showTab('upload-tab', 'gallery-tab')">Upload Image</button>
-            <button class="tab-button" onclick="showTab('gallery-tab', 'upload-tab')">Choose from Gallery</button>
+            <button class="tab-button active" onclick="show_tab('upload-tab', 'gallery-tab')">Upload Image</button>
+            <button class="tab-button" onclick="show_tab('gallery-tab', 'upload-tab')">Choose from Gallery</button>
         </div>
     
         <div id="upload-tab" class="tab-content active">
@@ -42,8 +42,8 @@
     <h2>Notification time:</h2>
     <div id="chooser" class="chooser">
         <div class="tabs"> 
-            <button class="tab-button active" onclick="showTab('now-time-tab', 'custom-time-tab')">Now</button>
-            <button class="tab-button" onclick="showTab('custom-time-tab', 'now-time-tab')">Custom Time</button>
+            <button class="tab-button active" onclick="show_tab('now-time-tab', 'custom-time-tab')">Now</button>
+            <button class="tab-button" onclick="show_tab('custom-time-tab', 'now-time-tab')">Custom Time</button>
         </div>
         <div id="now-time-tab" class="tab-content active">
             <input type="checkbox" id="now-checkbox" class="now-checkbox" checked disabled>
