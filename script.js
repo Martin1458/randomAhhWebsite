@@ -1,3 +1,6 @@
+//! TODO: each chooser should green up when completed
+//! TODO: hide the svg while not generated
+//! TODO: add the background image after the svg is generated
 let selectedItem = null;
 
 function search() {
@@ -160,10 +163,10 @@ inputImage.onchange = evt => {
 
 let imageWidth = 0;
 let imageHeight = 0;
-const svg_notification = document.getElementById('svg-notification');
+const svgNotification = document.getElementById('svg-notification');
 
 function update_svg_background(imagePath, imageWidth, imageHeight) {
-    svg_notification.setAttribute('viewBox', '0 0 '+ imageWidth + ' '+ imageHeight);
+    svgNotification.setAttribute('viewBox', '0 0 '+ imageWidth + ' '+ imageHeight);
     const svgBackgroundImage = document.getElementById('background-image');
     console.log("SVG Background Image:", svgBackgroundImage);
     if (notificationBackgroundImage) {
@@ -222,14 +225,30 @@ const notification_text = document.getElementById('notification-text');
 
 const notificationGroup = document.getElementById('notification-group');
 const notificationBackgroundImage = document.getElementById('background-image');
+
+const svgNotificationBackgroundBar = document.getElementById('Background');
+
+const roundedCornersRect = document.querySelector('#rounded-corners rect');
+
 function update_notification() {
+    let secondLineNeeded = false;
     // Get the text from the textarea
-    update_notification_text(selectedItem.trackName, notification_text.value);
+    secondLineNeeded = update_notification_text(selectedItem.trackName, notification_text.value);
     
+    // Make the notification taller if a second line is needed
+    if (secondLineNeeded) {
+        svgNotificationBackgroundBar.setAttribute("height", "215");
+        svgNotificationIcon.setAttribute("y", "54");
+        roundedCornersRect.setAttribute('y', '54');
+        console.log("Second line needed, increasing height");
+    } else {
+        svgNotificationBackgroundBar.setAttribute("height", "185");
+        svgNotificationIcon.setAttribute("y", "39");
+        roundedCornersRect.setAttribute('y', '39');
+    }
     // Update the image
     let artworkUrl = selectedItem.artworkUrl512 || selectedItem.artworkUrl100 || './images/placeholder.png';
     update_notification_icon(artworkUrl);
-    
     
     // Update the notification time
     const timeNowTab = document.getElementById('now-time-tab');
@@ -244,11 +263,15 @@ function update_notification() {
 }
 
 function update_notification_text(title, description="") {
+    // returns true if second line is needed
+
     svgNotificationTitle.textContent = title;
     
     if (description) {
-        update_notification_description(description);
+        return update_notification_description(description);
     }
+    
+    return false; 
 }
 
 function update_notification_description(description) {
@@ -275,18 +298,20 @@ function update_notification_description(description) {
         svgNotificationDescription.appendChild(secondLineTspan);
         let secondLineBBox = secondLineTspan.getBBox();
 
-        if (secondLineBBox.width > maxWidthSecondLine) {
+        if (secondLineBBox.width > maxWidth) {
             let secondSplitIndex = secondLineText.length;
             while (secondSplitIndex > 0) {
                 tempSecondTextNode.textContent = secondLineText.slice(0, secondSplitIndex) + '...';
                 secondLineBBox = secondLineTspan.getBBox();
-                if (secondLineBBox.width <= maxWidthSecondLine) break;
+                if (secondLineBBox.width <= maxWidth) break;
                 secondSplitIndex--;
             }
         }
         
         secondLineTspan.textContent = tempSecondTextNode.textContent; // Set the truncated text
     }
+
+    return secondLineText.length > 0; // Return true if there is a second line
 }
 
 function split_text(text, maxWidth) {
