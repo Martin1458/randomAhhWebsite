@@ -66,6 +66,8 @@ function select() {
     }
 
     if (selectedItem) {
+        let chooserDiv = searchContainer.closest('.chooser'); // Get the parent chooser div
+        chooserDiv.classList.add('done');
         console.log('Selected item:', selectedItem);
         // Clear the search-container
         searchContainer.innerHTML = '';
@@ -84,6 +86,8 @@ function select() {
         if (removeButton) {
             removeButton.addEventListener('click', () => {
                 selectedItem = null; // Clear the selected item
+                let chooserDiv = searchContainer.closest('.chooser'); // Get the parent chooser div
+                chooserDiv.classList.remove('done');
                 select(); // Call select() to reset the UI
             });
         } else {
@@ -105,6 +109,22 @@ function select() {
 }
 
 select(); // Call select() to initialize the UI
+
+// Select the textarea element
+const notificationText = document.getElementById('notification-text');
+
+// Add an event listener to detect changes in the textarea
+notificationText.addEventListener('input', () => {
+    let chooserDiv = notificationText.closest('.chooser'); // Get the parent chooser div
+    if (notificationText.value.trim() !== '') {
+        // Add the 'done' class to the parent chooser div if there is a value
+        chooserDiv.classList.add('done');
+    } else {
+        // Remove the 'done' class if the value is empty
+        chooserDiv.classList.remove('done');
+    }
+});
+
 
 function show_tab(tabId, hideId) {
     // Remove active class from the tab specified by hideId
@@ -193,6 +213,8 @@ function load_gallery_images() {
         img.addEventListener('click', () => {
             console.log(`Selected image: ${imagePath}`);
             imagePreview.src = imagePath;
+            let chooserDiv = imagePreview.closest('.chooser'); // Get the parent chooser div
+            chooserDiv.classList.add('done');
             // Create a new Image object to load the selected image
             const img = new Image();
             img.src = imagePath;
@@ -316,25 +338,42 @@ function update_notification_description(description) {
 
 function split_text(text, maxWidth) {
     // Split the text into two lines if necessary
-    let splitIndex = text.length;
     let firstLine = text;
     let secondLine = '';
-    
+
     // Measure the width of the first line and split if necessary
     const tempTextNode = document.createTextNode(text);
     svgNotificationDescription.appendChild(tempTextNode);
     let descriptionBBox = svgNotificationDescription.getBBox();
-    
+
     if (descriptionBBox.width > maxWidth) {
-        while (splitIndex > 0) {
-            tempTextNode.textContent = text.slice(0, splitIndex);
+        let words = text.split(' ');
+        let currentLine = '';
+
+        for (let i = 0; i < words.length; i++) {
+            let testLine = currentLine + (currentLine ? ' ' : '') + words[i];
+            tempTextNode.textContent = testLine;
             descriptionBBox = svgNotificationDescription.getBBox();
-            if (descriptionBBox.width <= maxWidth) break;
-            splitIndex--;
+
+            if (descriptionBBox.width > maxWidth) {
+                // If adding the word exceeds maxWidth, finalize the first line
+                firstLine = currentLine.trim();
+                secondLine = words.slice(i).join(' ').trim();
+                break;
+            } else {
+                currentLine = testLine;
+            }
         }
-        firstLine = text.slice(0, splitIndex).trim();
-        secondLine = text.slice(splitIndex).trim();
+
+        // If all words fit in the first line
+        if (!secondLine) {
+            firstLine = currentLine.trim();
+        }
     }
+
+    // Clean up the temporary text node
+    svgNotificationDescription.removeChild(tempTextNode);
+
     return [firstLine, secondLine];
 }
 
